@@ -15,7 +15,7 @@ class EntryPage extends StatelessWidget {
       body: new Column(
         children:[
           Container(
-            child: Text("Try to do N!")
+            child: Counter()
           ),
           Flexible(
             child: Container(
@@ -36,4 +36,31 @@ class EntryPage extends StatelessWidget {
       )
     );
   }
+}
+
+ class Counter extends StatefulWidget {
+  @override
+  _CounterState createState() => _CounterState();
+}
+
+class _CounterState extends State<Counter> {
+  int _count = 0;
+
+  void increment() {
+    setState(() {
+      _count++;
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: <Widget>[
+      RaisedButton(
+        onPressed: increment,
+        child: Text(_count.toString())
+      )
+    ],
+    );
+  }
+
+
 }
