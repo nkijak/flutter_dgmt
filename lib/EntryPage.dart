@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'models.dart';
 
 class EntryPage extends StatelessWidget {
-  EntryPage({this.type});
+  EntryPage({Key key, this.type, this.exerciseSet}):super(key: key);
   final String type;
+  final ExerciseSet exerciseSet;
 
   final TextEditingController _textController = TextEditingController();
 
@@ -15,7 +17,7 @@ class EntryPage extends StatelessWidget {
       body: new Column(
         children:[
           Container(
-            child: Counter()
+            child: Counter(exerciseSet)
           ),
           Flexible(
             child: Container(
@@ -38,29 +40,29 @@ class EntryPage extends StatelessWidget {
   }
 }
 
- class Counter extends StatefulWidget {
+class Counter extends StatefulWidget {
+  Counter(this.exerciseSet);
+  final ExerciseSet exerciseSet;
   @override
-  _CounterState createState() => _CounterState();
+  State<StatefulWidget> createState() => _CounterState();
 }
 
 class _CounterState extends State<Counter> {
-  int _count = 0;
-
-  void increment() {
+  void _increment() {
     setState(() {
-      _count++;
+      widget.exerciseSet.rep();
     });
   }
   @override
   Widget build(BuildContext context) {
-    return Row(children: <Widget>[
-      RaisedButton(
-        onPressed: increment,
-        child: Text(_count.toString())
-      )
-    ],
-    );
+    return  Row(
+      children: <Widget>[
+        RaisedButton(
+            onPressed: _increment,
+            child: Text(widget.exerciseSet.count().toString())
+        )
+      ],
+    )
+    ;
   }
-
-
 }
