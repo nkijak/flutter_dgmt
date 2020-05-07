@@ -31,7 +31,7 @@ class EntryPage extends StatelessWidget {
           Container(
             child: RaisedButton(
               child: Text("Submit"),
-              onPressed: () => Navigator.pop(context, _textController.text)
+              onPressed: () => Navigator.pop(context, exerciseSet)
             )
           )
         ],

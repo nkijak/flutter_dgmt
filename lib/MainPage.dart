@@ -16,19 +16,31 @@ class WorkoutCardState extends State<WorkoutCard> {
   WorkoutCardState({this.type, this.sets});
   final String type;
   final List<ExerciseSet> sets;
-  
+
+  _allowSetEntry(BuildContext context, ExerciseSet exerciseSet) async {
+    final ExerciseSet result = await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) =>
+            EntryPage(
+                type: type,
+                exerciseSet: exerciseSet
+            )));
+
+    setState(() {
+      sets.add(result);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    var exerciseSet = new ExerciseSet();
-    sets.add(exerciseSet);
     return  new Card(
         child: new Column(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             new Container(
               height: 80.0,
-              margin: new EdgeInsets.all(5.0),
-              child: new SimpleBarChart.withSampleData(),
+              margin: EdgeInsets.all(5.0),
+              child: ExerciseBarChart(sets),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -59,59 +71,36 @@ class WorkoutCardState extends State<WorkoutCard> {
               children: <Widget>[
                 new FlatButton(
                   child: Text("RECORD ${type.toUpperCase()}"),
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) =>
-                        EntryPage(
-                          type: type,
-                          exerciseSet: exerciseSet,)),
-                  ),
+                  onPressed: () { _allowSetEntry(context, ExerciseSet()); }
                 ),
               ],
             ),
           ]
         ),
-      )
-        ;
+      );
   }
 }
-class SimpleBarChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+
+class ExerciseBarChart extends StatelessWidget {
+  final List<ExerciseSet> sets;
   final bool animate;
-
-  SimpleBarChart(this.seriesList, {this.animate});
-
-  /// Creates a [BarChart] with sample data and no transition.
-  factory SimpleBarChart.withSampleData() {
-    return new SimpleBarChart(
-      _createExerciseData(),
-      // Disable animations for image tests.
-      animate: true,
-    );
-  }
-
+  ExerciseBarChart(this.sets, {this.animate});
 
   @override
   Widget build(BuildContext context) {
-    return new charts.BarChart(
-      seriesList,
-      animate: animate,
-    );
-  }
-
-  /// Create one series with sample hard coded data.
-  static List<charts.Series<ExerciseSet, String>> _createExerciseData() {
-    final data = [ ExerciseSet()];
-
-    return [
+    final List<charts.Series<ExerciseSet, String>> series = [
       new charts.Series<ExerciseSet, String>(
         id: 'Reps',
         colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
         domainFn: (ExerciseSet sales, _) => sales.start.day.toString(),
         measureFn: (ExerciseSet sales, _) => sales.count(),
-        data: data,
+        data: sets,
       )
     ];
+    return new charts.BarChart(
+      series,
+      animate: animate
+    );
   }
 }
 

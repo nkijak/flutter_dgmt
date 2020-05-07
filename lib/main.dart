@@ -10,6 +10,7 @@ class DGMT2 extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.light,
         primaryColor: Colors.green,
+        buttonBarTheme: ButtonBarTheme.of(context)
       ),
       home: MainPage()
     );
