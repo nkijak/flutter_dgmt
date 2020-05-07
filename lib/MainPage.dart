@@ -55,21 +55,19 @@ class WorkoutCardState extends State<WorkoutCard> {
                 )
               ],
             ),
-            new ButtonTheme.bar( // make buttons use the appropriate styles for cards
-              child: new ButtonBar(
-                children: <Widget>[
-                  new FlatButton(
-                    child: Text("RECORD ${type.toUpperCase()}"),
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) =>
-                          EntryPage(
-                            type: type,
-                            exerciseSet: exerciseSet,)),
-                    ),
+            new ButtonBar(
+              children: <Widget>[
+                new FlatButton(
+                  child: Text("RECORD ${type.toUpperCase()}"),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>
+                        EntryPage(
+                          type: type,
+                          exerciseSet: exerciseSet,)),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ]
         ),
@@ -117,19 +115,3 @@ class SimpleBarChart extends StatelessWidget {
   }
 }
 
-class MainPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('DGMT')
-      ),
-      body: Column(
-        children: [
-            WorkoutCard(typeName: "pullups"),
-            WorkoutCard(typeName: "pushups"),
-        ]
-      )
-    );
-  }
-}
