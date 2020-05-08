@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 
 class Rep {
@@ -126,7 +128,7 @@ class ExerciseSet {
 }
 
 enum WorkoutType { PUSHUP, SITUP, SQUAT }
-enum Level { EASY, MED, HARD }
+enum Difficulty { EASY, MED, HARD }
 
 final int LONG_REST = 120000;
 final int MEDIUM_REST = 90000;
@@ -136,43 +138,43 @@ final int SHORT_REST = 45000;
 final PushupSchedule = {
   'week1': {
     'day1': {
-      Level.EASY: {
+      Difficulty.EASY: {
         'reps': [2,3,2,2,3],
         'rests': [STANDARD_REST]
       },
-      Level.MED: {
+      Difficulty.MED: {
         'reps': [6,6,4,4,5],
         'rests': [STANDARD_REST]
       },
-      Level.HARD: {
+      Difficulty.HARD: {
         'reps': [10,12,7,7,9],
         'rests': [STANDARD_REST]
       },
     },
     'day2': {
-      Level.EASY: {
+      Difficulty.EASY: {
         'reps': [3,4,2,3,4],
         'rests': [MEDIUM_REST]
       },
-      Level.MED: {
+      Difficulty.MED: {
         'reps': [6,8,6,6,7],
         'rests': [MEDIUM_REST]
       },
-      Level.HARD: {
+      Difficulty.HARD: {
         'reps': [10,12,8,8,12],
         'rests': [MEDIUM_REST]
       },
     },
     'day3': {
-      Level.EASY: {
+      Difficulty.EASY: {
         'reps': [4,5,4,4,5],
         'rests': [LONG_REST]
       },
-      Level.MED: {
+      Difficulty.MED: {
         'reps': [8,10,7,7,10],
         'rests': [LONG_REST]
       },
-      Level.HARD: {
+      Difficulty.HARD: {
         'reps': [11,15,8,8,13],
         'rests': [LONG_REST]
       },
@@ -181,3 +183,115 @@ final PushupSchedule = {
   //TODO add other weeks
 };
 
+class Logg{
+  History history;
+  int week;
+  int day;
+  Logg(this.history, this.week, this.day);
+  Logg.fromJSON(this.history, Map<String, dynamic> json){
+    //TODO load json
+  }
+  Map<String, dynamic> toJSON(){
+    //TODO implement
+    return {};
+  }
+  int get totalCount {
+    return 0;
+  }
+}
+
+class Level {
+  Map<String, dynamic> toJSON(){
+    //TODO implement
+    return {};
+  }
+}
+
+class GenericLevel extends Level {
+  int index;
+  int startWeek;
+  String label;
+
+  GenericLevel(this.index, this.startWeek, this.label);
+  GenericLevel.fromJson(Map<String, dynamic> json) {
+    index = json['index'];
+    label = json['label'];
+    startWeek = json['startWeek'];
+  }
+}
+
+
+class History {
+  List<int> testResults = List();
+  Level currentLevel;
+  List<Logg> logs = List();
+  int week = 1;
+  int day = 0;
+  WorkoutType type;
+  DateTime lastWorkout;
+  bool finished;
+  bool finalUnlocked;
+
+  History(String jsonHistory) {
+    final json = jsonDecode(jsonHistory);
+    day = json['day'];
+    week = json['week'];
+    type = WorkoutType.values.firstWhere((el) => el == json['type']);
+    currentLevel = GenericLevel.fromJson(json['level']);
+
+    lastWorkout = DateTime.fromMillisecondsSinceEpoch(json['lastWorkout']);
+    finished = json['finished'];
+    finalUnlocked = json['finalUnlocked'];
+
+    List<int> jsonTestResults = json['testResults'];
+    testResults.addAll(jsonTestResults);
+
+    List<Map<String, dynamic>> jsonLogs = json['logs'];
+    logs.addAll(jsonLogs.map((el) => Logg.fromJSON(this, el)));
+  }
+
+  Map<String, dynamic> toJSON() =>
+    {
+      'week': week,
+      'day': day,
+      'level': currentLevel.toJSON(),
+      'testResults': testResults,
+      'type': type.toString(),
+      'finished': finished,
+      'finalUnlocked': finalUnlocked,
+      'lastWorkout': lastWorkout.millisecondsSinceEpoch,
+      'logs': logs.map((el) => el.toJSON())
+    };
+
+  Logg get currentLog {
+    if (logs.isEmpty) {
+      logs.add(Logg(this, week, day));
+    }
+    return logs.last;
+  }
+
+  Logg removeCurrentLog() {
+    if (logs.isEmpty) return null;
+    return logs.removeLast();
+  }
+
+  bool equals(DayAndWeek dayAndWeek) =>
+      day == dayAndWeek.day && week == dayAndWeek.week;
+
+  int get totalCount {
+    final totalCount = logs.fold(0, (totalCount, log) => totalCount + log.totalCount);
+    return testResults.fold(totalCount, (totalCount, i) => totalCount+i);
+  }
+
+  bool isTest() => day == 0 && week != 7;
+  void setToTest() {
+    day = 0;
+  }
+  bool isFinal() {
+    if (week >= 7) {
+      finalUnlocked=true;
+      return true;
+    }
+    return false;
+  }
+}
