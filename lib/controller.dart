@@ -4,7 +4,4 @@ class WorkoutController {
   //History history;
   ExerciseSetEz exerciseSet;
 
-  void beginExercise() {
-    Logg currentLog
-  }
 }
