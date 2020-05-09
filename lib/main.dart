@@ -23,7 +23,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("DGMT")),
+        appBar: AppBar(title: Text("Drop and Give Me Twenty!")),
         body: Column(
             children: [
               Expanded(
@@ -130,18 +130,25 @@ class _ExerciseInfoState extends State<ExerciseInfo> with WidgetsBindingObserver
   Widget build(BuildContext context) {
     List<Widget> _children = [
       Expanded(
-        child: RaisedButton(
-          child: Text(widget.header, style: button,),
-          onPressed: () {
-            print("${widget.header} pushed");
-          },
+        //XXX this sizedbox is kinda gross, not sure how to do it otherwise
+        child: SizedBox(
+          height: 165,
+          child: RaisedButton(
+              color: Colors.grey[400],
+              highlightColor: Colors.green,
+              child: Text(widget.header, style: button,),
+              onPressed: widget.rtl == true? null: () {
+                print("${widget.header} pushed");
+              },
+            ),
         ),
       ),
       Padding(
         padding: const EdgeInsets.all(3.0),
         child: Column(
+          crossAxisAlignment: (widget.rtl ==true? CrossAxisAlignment.end: CrossAxisAlignment.start),
           children: <Widget>[
-            Text("Last", style: label),
+            Text("Last", style: label, textAlign: TextAlign.left,),
             Text(_formatDate(workoutController.lastWorkout), style: value),
 
             Text('Last Count', style: label),
