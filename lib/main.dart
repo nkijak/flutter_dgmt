@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutterdgmt/controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 void main() => runApp(new DGMT2());
 
@@ -58,11 +61,47 @@ class Home extends StatelessWidget {
   }
 }
 
-class ExerciseInfo extends StatelessWidget {
-  String header;
-  bool rtl = false;
+class ExerciseInfo extends StatefulWidget {
+  final String header;
+  final bool rtl;
+
 
   ExerciseInfo(this.header, {this.rtl});
+  @override
+  _ExerciseInfoState createState() => _ExerciseInfoState();
+}
+
+class _ExerciseInfoState extends State<ExerciseInfo> with WidgetsBindingObserver {
+  //TODO needs to be variable
+  WorkoutController workoutController = PushupWorkoutController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _onResume();
+    }
+  }
+
+  _onResume() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      workoutController.forceReloadHistory(prefs);
+    });
+  }
+
+  String _formatDate(DateTime dateTime) => DateFormat.yMd().format(dateTime);
+
 
   final label = TextStyle(
       fontSize: 20,
@@ -92,9 +131,9 @@ class ExerciseInfo extends StatelessWidget {
     List<Widget> _children = [
       Expanded(
         child: RaisedButton(
-          child: Text(header, style: button,),
+          child: Text(widget.header, style: button,),
           onPressed: () {
-            print("$header pushed");
+            print("${widget.header} pushed");
           },
         ),
       ),
@@ -102,23 +141,20 @@ class ExerciseInfo extends StatelessWidget {
         padding: const EdgeInsets.all(3.0),
         child: Column(
           children: <Widget>[
-            Text(
-                "Last",
-                style: label
-            ),
-            Text("1/1/11", style: value),
+            Text("Last", style: label),
+            Text(_formatDate(workoutController.lastWorkout), style: value),
 
-            Text("Last Count", style: label),
-            Text("112", style: value),
+            Text('Last Count', style: label),
+            Text('${workoutController.currentLog.totalCount}', style: value),
 
-            Text("Total+Tests", style: label),
-            Text("696", style: value),
+            Text('Total+Tests', style: label),
+            Text('${workoutController.totalCount}', style: value),
           ],
         ),
       )
     ];
     return Row(
-      children: (rtl == true ? _children.reversed.toList() : _children),
+      children: (widget.rtl == true ? _children.reversed.toList() : _children),
     );
   }
 }

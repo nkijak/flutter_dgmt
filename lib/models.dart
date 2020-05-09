@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-
 class Rep {
   DateTime when = DateTime.now();
   int avgTime;
@@ -24,7 +22,7 @@ class ExerciseSetEz{
   DateTime start = DateTime.now();
 
   void rep() {
-    reps.add(Rep());
+    reps.add(Rep(null, 1, 1));
   }
 
   int count() {
@@ -213,7 +211,7 @@ class Logg{
   Logg.fromJSON(this.history, Map<String, dynamic> json){
     week = json['week'];
     day = json['day'];
-    List<Map<String, dynamic>> jsonCounts = json['counts']
+    List<Map<String, dynamic>> jsonCounts = json['counts'];
     _counts = jsonCounts.map((jsoncount) => Rep.fromJSON(history, jsoncount));
 
   }
@@ -232,7 +230,7 @@ class Logg{
     return {
       "week": week,
       "day": day,
-      "counts": counts.map((rep) => rep.toJSON())
+      "counts": counts
     };
   }
 
@@ -277,7 +275,7 @@ class History {
   int week = 1;
   int day = 0;
   WorkoutType type;
-  DateTime lastWorkout;
+  DateTime lastWorkout = DateTime.now();
   bool finished;
   bool finalUnlocked;
 

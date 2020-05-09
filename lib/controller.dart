@@ -4,7 +4,7 @@ import 'package:flutterdgmt/models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class WorkoutController {
-  History history;
+  History history = History();
   ExerciseSet exerciseSet;
 
   String getTag();
@@ -17,7 +17,9 @@ abstract class WorkoutController {
 
 
   void beginExercise(){
-    //TODO lookup history
+    Logg currentLog = Logg(history, history.week, history.day);
+    history.logs.add(currentLog);
+
     getThisWeekAndDaySet();
   }
 
@@ -27,12 +29,15 @@ abstract class WorkoutController {
   }
 
   void forceReloadHistory(SharedPreferences prefs) {
-    history = History.deserialize(prefs.getString(getKeyForHistory()));
-    print('Loaded history as ${prefs.getString(getKeyForHistory())}');
+    String historyJson = prefs.getString(getKeyForHistory());
+    if (historyJson != null && historyJson.isNotEmpty) {
+      history = History.deserialize(historyJson);
+      print('Loaded history as ${prefs.getString(getKeyForHistory())}');
 
-    if (history == null) {
+    } else {
       history = History();
       history.type = getWorkoutType();
+
     }
     if (exerciseSet == null && !isTest && !isFinal) getThisWeekAndDaySet();
   }
@@ -69,6 +74,7 @@ abstract class WorkoutController {
 
   int get week => (history==null? 1: history.week);
   int get day => (history==null? 0: history.day);
+  DateTime get lastWorkout => (history==null? DateTime.now(): history.lastWorkout);
   bool get isTest => (history == null || history.isTest());
   bool get isFinal => (history != null && history.isFinal());
   String get levelForDisplay => history.currentLevel.label;
