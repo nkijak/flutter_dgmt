@@ -39,6 +39,9 @@ class DayAndWeek {
 
     bool wasFound() => day > 0 && week > 0;
 
+    DayAndWeek changeWeek(int newweek) => DayAndWeek(day, newweek);
+    DayAndWeek changeDay(int newday) => DayAndWeek(newday, week);
+
     @override
     bool operator ==(Object other) =>
         identical(this, other) ||
@@ -64,10 +67,10 @@ class ExerciseSet {
   bool wrappedRests;
   ExerciseSet(this.counts, this.rests);
 
-  ExerciseSet.getPushupSetFor(int week, int day, Level level) {
+  ExerciseSet.getPushupSetFor(int week, int day, Difficulty level) {
     print('getting pushups for week $week, day $day, level $level');
     final schedule = PushupSchedule['week$week']['day$day'][level];
-    counts = schedule['counts'];
+    counts = schedule['reps'];
     rests = schedule['rests'];
   }
 
@@ -155,7 +158,7 @@ const int SHORT_REST = 45000;
 
 const PushupSchedule = {
   'week1': {
-    'day1': {
+    'day0': {
       Difficulty.EASY: {
         'reps': [2,3,2,2,3],
         'rests': [STANDARD_REST]
@@ -169,7 +172,7 @@ const PushupSchedule = {
         'rests': [STANDARD_REST]
       },
     },
-    'day2': {
+    'day1': {
       Difficulty.EASY: {
         'reps': [3,4,2,3,4],
         'rests': [MEDIUM_REST]
@@ -183,7 +186,7 @@ const PushupSchedule = {
         'rests': [MEDIUM_REST]
       },
     },
-    'day3': {
+    'day2': {
       Difficulty.EASY: {
         'reps': [4,5,4,4,5],
         'rests': [LONG_REST]
@@ -270,7 +273,7 @@ class GenericLevel extends Level {
 
 class History {
   List<int> testResults = List();
-  Level currentLevel;
+  Level currentLevel = GenericLevel(0, 0, "START");
   List<Logg> logs = List();
   int week = 1;
   int day = 0;
