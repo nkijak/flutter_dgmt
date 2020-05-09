@@ -8,17 +8,17 @@ class WorkoutCard extends StatefulWidget {
   final String typeName;
 
   @override
-  State createState() => WorkoutCardState(type:typeName, sets: List<ExerciseSet>());
+  State createState() => WorkoutCardState(type:typeName, sets: List<ExerciseSetEz>());
 
 }
 
 class WorkoutCardState extends State<WorkoutCard> {
   WorkoutCardState({this.type, this.sets});
   final String type;
-  final List<ExerciseSet> sets;
+  final List<ExerciseSetEz> sets;
 
-  _allowSetEntry(BuildContext context, ExerciseSet exerciseSet) async {
-    final ExerciseSet result = await Navigator.push(
+  _allowSetEntry(BuildContext context, ExerciseSetEz exerciseSet) async {
+    final ExerciseSetEz result = await Navigator.push(
         context,
         MaterialPageRoute(builder: (context) =>
             EntryPage(
@@ -71,7 +71,7 @@ class WorkoutCardState extends State<WorkoutCard> {
               children: <Widget>[
                 new FlatButton(
                   child: Text("RECORD ${type.toUpperCase()}"),
-                  onPressed: () { _allowSetEntry(context, ExerciseSet()); }
+                  onPressed: () { _allowSetEntry(context, ExerciseSetEz()); }
                 ),
               ],
             ),
@@ -82,18 +82,18 @@ class WorkoutCardState extends State<WorkoutCard> {
 }
 
 class ExerciseBarChart extends StatelessWidget {
-  final List<ExerciseSet> sets;
+  final List<ExerciseSetEz> sets;
   final bool animate;
   ExerciseBarChart(this.sets, {this.animate});
 
   @override
   Widget build(BuildContext context) {
-    final List<charts.Series<ExerciseSet, String>> series = [
-      new charts.Series<ExerciseSet, String>(
+    final List<charts.Series<ExerciseSetEz, String>> series = [
+      new charts.Series<ExerciseSetEz, String>(
         id: 'Reps',
         colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
-        domainFn: (ExerciseSet sales, _) => sales.start.day.toString(),
-        measureFn: (ExerciseSet sales, _) => sales.count(),
+        domainFn: (ExerciseSetEz sales, _) => sales.start.day.toString(),
+        measureFn: (ExerciseSetEz sales, _) => sales.count(),
         data: sets,
       )
     ];

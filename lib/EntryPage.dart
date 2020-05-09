@@ -4,7 +4,7 @@ import 'models.dart';
 class EntryPage extends StatelessWidget {
   EntryPage({Key key, this.type, this.exerciseSet}):super(key: key);
   final String type;
-  final ExerciseSet exerciseSet;
+  final ExerciseSetEz exerciseSet;
 
   final TextEditingController _textController = TextEditingController();
 
@@ -42,7 +42,7 @@ class EntryPage extends StatelessWidget {
 
 class Counter extends StatefulWidget {
   Counter(this.exerciseSet);
-  final ExerciseSet exerciseSet;
+  final ExerciseSetEz exerciseSet;
   @override
   State<StatefulWidget> createState() => _CounterState();
 }
