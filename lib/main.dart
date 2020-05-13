@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterdgmt/controller.dart';
+import 'package:flutterdgmt/workoutSettings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
@@ -12,7 +13,8 @@ class DGMT2 extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.light,
         primaryColor: Colors.green,
-        buttonBarTheme: ButtonBarTheme.of(context)
+        buttonBarTheme: ButtonBarTheme.of(context),
+        buttonTheme: ButtonTheme.of(context).copyWith(minWidth: 50,padding: EdgeInsets.only(left: 3, right: 3))
       ),
         home: Home()
     );
@@ -37,7 +39,6 @@ class Home extends StatelessWidget {
                             Color(0xffffffff),
                           ]
                       ),
-                      //TODO this doesn't seem to be appearing
                       image: DecorationImage(
                         image: AssetImage('images/bodybg.gif'),
                         repeat: ImageRepeat.repeat,
@@ -139,6 +140,8 @@ class _ExerciseInfoState extends State<ExerciseInfo> with WidgetsBindingObserver
               child: Text(widget.header, style: button,),
               onPressed: widget.rtl == true? null: () {
                 print("${widget.header} pushed");
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                    WorkoutSettingPage(workoutController))); //TODO get title from controller
               },
             ),
         ),

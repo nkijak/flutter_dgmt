@@ -146,6 +146,6 @@ class PushupWorkoutController extends WorkoutController {
 
   @override
   void getThisWeekAndDaySet() {
-    super.exerciseSet = ExerciseSet.getPushupSetFor(history.week, history.day, history.currentLevel);
+    super.exerciseSet = ExerciseSet.getPushupSetFor(history.week, history.day, Difficulty.EASY); //FIXME this used to be history.currentLevel, but not clear how level -> difficulty
   }
 }
