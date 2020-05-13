@@ -279,8 +279,8 @@ class History {
   int day = 0;
   WorkoutType type;
   DateTime lastWorkout = DateTime.now();
-  bool finished;
-  bool finalUnlocked;
+  bool finished = false;
+  bool finalUnlocked = false;
 
   History();
 

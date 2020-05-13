@@ -35,7 +35,7 @@ class WorkoutSettingPage extends StatelessWidget {
                       )
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    padding: const EdgeInsets.all(20),
                     child: Column(
                       children: <Widget>[
                         SpeechBalloon(controller),
@@ -46,8 +46,8 @@ class WorkoutSettingPage extends StatelessWidget {
                           margin: EdgeInsets.all(5.0),
                           child: ExerciseBarChart(controller),
                         ),
-                        FlatButton(child:Text('Start')),
-                        FlatButton(child:Text('Final Test')),
+                        StartButton(controller),
+                        TestButton(controller),
                       ],
                     ),
                   ),
@@ -58,6 +58,39 @@ class WorkoutSettingPage extends StatelessWidget {
     );
   }
 }
+
+class StartButton extends StatelessWidget {
+  WorkoutController controller;
+  StartButton(this.controller);
+
+  void _doActivity(){
+    print("Do activity stuff");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return
+      FlatButton(
+        child:Text('Start',),
+        onPressed: _doActivity,);
+  }
+}
+
+
+class TestButton extends StatelessWidget {
+  WorkoutController controller;
+  TestButton(this.controller);
+
+  @override
+  Widget build(BuildContext context) {
+    //TODO this is more complicated, but is likely going away so not bothering
+    return FlatButton(child:Text("FINAL"),
+        onPressed: (controller.finalUnlocked? () {
+          print("final requested");
+        }: null));
+  }
+}
+
 
 class SpeechBalloon extends StatefulWidget {
   WorkoutController controller;
