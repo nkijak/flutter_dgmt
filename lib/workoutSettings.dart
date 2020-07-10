@@ -3,6 +3,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutterdgmt/controller.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'models.dart';
+import 'counterPage.dart';
 
 class WorkoutSettingPage extends StatelessWidget {
   final WorkoutController controller;
@@ -61,18 +62,29 @@ class WorkoutSettingPage extends StatelessWidget {
 
 class StartButton extends StatelessWidget {
   WorkoutController controller;
+
   StartButton(this.controller);
 
-  void _doActivity(){
-    print("Do activity stuff");
+  void _doActivity(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Counter(controller)));
+//    return (controller.isTest? _startTest:
+//            controller.isFinal? _startFinal:
+//            Future.value(controller.beginExercise()).then(_startCounter)
   }
+
+  ExerciseSet _startTest() {}
 
   @override
   Widget build(BuildContext context) {
-    return
-      FlatButton(
-        child:Text('Start',),
-        onPressed: _doActivity,);
+    return FlatButton(
+      child: Text(
+        'Start',
+      ),
+      onPressed: () {
+        _doActivity(context);
+      },
+    );
   }
 }
 
@@ -84,10 +96,11 @@ class TestButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //TODO this is more complicated, but is likely going away so not bothering
-    return FlatButton(child:Text("FINAL"),
-        onPressed: (controller.finalUnlocked? () {
+    return FlatButton(
+        child: Text("FINAL"),
+        onPressed: (controller.finalUnlocked ? () {
           print("final requested");
-        }: null));
+        } : null));
   }
 }
 
