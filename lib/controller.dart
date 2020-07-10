@@ -16,7 +16,7 @@ abstract class WorkoutController {
   Difficulty getLevelForTestResult(int testCount);
 
 
-  void beginExercise(){
+  beginExercise() async {
     Logg currentLog = Logg(history, history.week, history.day);
     history.logs.add(currentLog);
 
